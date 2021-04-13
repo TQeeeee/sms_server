@@ -80,5 +80,15 @@ public class AuthController {
         }
         return result;
     }
+    @PostMapping("/logout")
+    public ResponseResult logOut(@RequestHeader("X-Token") String token){
+        ResponseResult result = new ResponseResult();
+        //session.removeAttribute(token);
+        //session.invalidate();
+        SecurityUtils.getSubject().logout();
+        // 删除redis中的标记
+        this.redisUtil.del(token);
+        return result;
+    }
 
 }
