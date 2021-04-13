@@ -9,11 +9,12 @@ import lombok.Data;
 @TableName(value="bas_user")
 public class BasUser {
     //@TableField(exist = false)
+    private Integer userIndex;
     @TableId
     private String userId;
     private String userPassword;
     private String userName;
     @TableField("role_id")
     private Long roleId;
-    private Long userSalt;
+
 }

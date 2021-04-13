@@ -5,7 +5,11 @@
 <mapper namespace="com.example.sms_server.mapper.BasUserMapper">
     <!--    public Account getAcct(Long id); -->
     <select id="getById" resultType="com.example.sms_server.entity.BasUser">
-    select * from  bas_user where user_id = #{id}
+        select * from  bas_user where user_id = #{id}
+    </select>
+    <!--BasUser findByUserName(String username);-->
+    <select id="findByUserName" resultType="com.example.sms_server.entity.BasUser">
+        select * from bas_user where user_name = #{username}
     </select>
     <!--批量插入用户-->
     <!--分页显示用户-->

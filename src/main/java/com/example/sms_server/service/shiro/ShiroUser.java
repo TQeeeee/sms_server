@@ -1,4 +1,17 @@
 package com.example.sms_server.service.shiro;
 
-public class ShiroUser {
+import lombok.Data;
+
+import java.io.Serializable;
+
+@Data
+public class ShiroUser implements Serializable {
+    private String userName;
+    private String id;
+    private String authCacheKey;
+    private String password;
+
+    public String toString() {
+        return this.authCacheKey;
+    }
 }

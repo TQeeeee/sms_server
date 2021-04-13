@@ -1,9 +1,9 @@
-package cn.com.authority.service.shiro.realm;
+package com.example.sms_server.service.shiro.realm;
 
-import cn.com.authority.entity.AuthSysUser;
-import cn.com.authority.service.IUserService;
-import cn.com.authority.service.shiro.ShiroUser;
-import cn.com.authority.utils.EncryptUtil;
+
+import com.example.sms_server.entity.BasUser;
+import com.example.sms_server.service.BasUserService;
+import com.example.sms_server.service.shiro.ShiroUser;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -17,44 +17,38 @@ import java.util.List;
 @Component("shiroRealm")
 public class ShiroAuthorizingRealm extends AuthorizingRealm {
     @Autowired
-    private IUserService userService;
+    private BasUserService basUserService;
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        // 已知用户名
-//        String username = principalCollection.getPrimaryPrincipal().toString();
-        ShiroUser shiroUser = (ShiroUser) principalCollection.getPrimaryPrincipal();
-        String username = shiroUser.getUserName();
-        //  资源：操作：id     user:create
-        List<String> permissionList = this.userService.getUserPermssions(username);
 
-        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-        simpleAuthorizationInfo.addStringPermissions(permissionList);
+        return null;
 
-        return simpleAuthorizationInfo;
     }
 
     /**
      * 身份认证信息
      * 重写该方法，从数据库中获取注册用户和对应的密码，封装成AuthenticationInfo对象返回
-     * */
+     */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         // authenticationToken 当前登录用户的身份标识
-        // 已知用户名
-        String username = authenticationToken.getPrincipal().toString();
-        // 再根据用户名从数据库中找密码
-        AuthSysUser user = this.userService.findByUserName(username);
-        if(user == null){
+        //已知用户id
+        String userId = authenticationToken.getPrincipal().toString();
+        // 再根据用户id从数据库中找密码
+        BasUser basUser = this.basUserService.getById(userId);
+        if (basUser == null) {
             throw new AccountException("account not exist");
         }
-        String password = user.getUrPassword();
+        String password = basUser.getUserPassword();
         // 用AuthenticationInfo对象，封装username和password
         ShiroUser shiroUser = new ShiroUser();
-        shiroUser.setId(user.getUrId());
-        shiroUser.setUserName(user.getUrUserName());
+        shiroUser.setId(basUser.getUserId());
+        shiroUser.setUserName(basUser.getUserName());
         shiroUser.setPassword(password);
-        shiroUser.setAuthCacheKey(user.getUrUserName()+user.getUrId());
-        SimpleAuthenticationInfo info= new SimpleAuthenticationInfo(shiroUser, password, this.getName());
+        //设置缓存关键字name+id
+        shiroUser.setAuthCacheKey(basUser.getUserName() + basUser.getUserId());
+        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(shiroUser, password, this.getName());
         return info;
     }
 }

@@ -1,4 +1,4 @@
-package cn.com.authority.utils;
+package com.example.sms_server.utils;
 
 import java.security.MessageDigest;
 
@@ -7,6 +7,7 @@ public class EncryptUtil {
     private static final String SHA1 = "SHA1";
     private static final String MD5 = "MD5";
     private static final String HMAC_SHA1 = "HmacSHA1";
+
     /**
      * MD5 加密
      */

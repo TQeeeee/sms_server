@@ -1,4 +1,4 @@
-package cn.com.authority.utils;
+package com.example.sms_server.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -16,7 +16,7 @@ public class JwtUtil {
      * 过期时间为一天
      * TODO 正式上线更换为15分钟
      */
-    private static final long EXPIRE_TIME = 60*60*1000;
+    private static final long EXPIRE_TIME = 60 * 60 * 1000;
 
     /**
      * token私钥
@@ -25,11 +25,12 @@ public class JwtUtil {
 
     /**
      * 生成签名,15分钟后过期
+     *
      * @param username
      * @param userId
      * @return
      */
-    public static String sign(String username,String userId){
+    public static String sign(String username, String userId) {
         //过期时间
         Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
         //私钥及加密算法
@@ -39,11 +40,11 @@ public class JwtUtil {
         header.put("typ", "JWT");
         header.put("alg", "HS256");
         //附带username和userID生成签名
-        return JWT.create().withHeader(header).withClaim(CLAIM_LOGIN_NAME,username)
-                .withClaim(CLAIM_ID,userId).withExpiresAt(date).sign(algorithm);
+        return JWT.create().withHeader(header).withClaim(CLAIM_LOGIN_NAME, username)
+                .withClaim(CLAIM_ID, userId).withExpiresAt(date).sign(algorithm);
     }
 
-    public static String sign(String username){
+    public static String sign(String userid) {
         //过期时间
         Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
         //私钥及加密算法
@@ -53,16 +54,16 @@ public class JwtUtil {
         header.put("typ", "JWT");
         header.put("alg", "HS256");
         //附带username和userID生成签名
-        return JWT.create().withHeader(header).withClaim(CLAIM_LOGIN_NAME,username).withExpiresAt(date).sign(algorithm);
+        return JWT.create().withHeader(header).withClaim(CLAIM_ID, userid).withExpiresAt(date).sign(algorithm);
     }
 
-    public static String verityToken(String token, String claimName){
+    public static String verityToken(String token, String claimId) {
         String urId = null;
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();
             DecodedJWT jwt = verifier.verify(token);
-            urId = jwt.getClaim(claimName).asString();
+            urId = jwt.getClaim(claimId).asString();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,7 +71,7 @@ public class JwtUtil {
     }
 
 
-    public static boolean verity(String token){
+    public static boolean verity(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(TOKEN_SECRET);
             JWTVerifier verifier = JWT.require(algorithm).build();

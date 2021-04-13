@@ -1,4 +1,4 @@
-package cn.com.authority.config;
+package com.example.sms_server.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +12,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 public class RedisConfiguration {
     /**
      * 配置自定义redisTemplate
+     *
      * @return
      */
     @Bean

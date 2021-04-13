@@ -1,11 +1,8 @@
-package cn.com.authority.config;
+package com.example.sms_server.config;
 
-import cn.com.authority.entity.AuthSysPermission;
-import cn.com.authority.service.IPermissionService;
-import cn.com.authority.service.shiro.filter.PermissionAuthFilter;
-import cn.com.authority.service.shiro.filter.TokenAuthFilter;
-import cn.com.authority.service.shiro.realm.ShiroAuthorizingRealm;
-import cn.com.authority.utils.RedisUtil;
+import com.example.sms_server.service.shiro.filter.TokenAuthFilter;
+import com.example.sms_server.service.shiro.realm.ShiroAuthorizingRealm;
+import com.example.sms_server.utils.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -34,9 +31,6 @@ public class ShiroConfiguration {
 
     private TokenAuthFilter tokenAuthFilter;
 
-    private PermissionAuthFilter permissionAuthFilter;
-    @Autowired
-    private IPermissionService permissionService;
 
     private static final String CACHE_KEY = "shiro:cache:";
     private static final String SESSION_KEY = "shiro:session:";
@@ -44,7 +38,7 @@ public class ShiroConfiguration {
     private static final String VALUE = "/";
 
     @Bean("shiroFilter")
-    public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("securityManager")DefaultWebSecurityManager securityManager) {
+    public ShiroFilterFactoryBean getShiroFilterFactoryBean(@Qualifier("securityManager") DefaultWebSecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
 
         // 创建一个Map对象包含所有要集成到Shiro框架中去的filter对象
@@ -54,23 +48,17 @@ public class ShiroConfiguration {
         // <filter-mapping
         this.tokenAuthFilter = new TokenAuthFilter();
         this.tokenAuthFilter.setRedisUtil(this.redisUtil);
-        this.permissionAuthFilter = new PermissionAuthFilter();
+
 
         filters.put("authcToken", this.tokenAuthFilter);
-        filters.put("permAuthc", this.permissionAuthFilter);
+
 
         // 在shiro中注册过滤器
         shiroFilterFactoryBean.setFilters(filters);
 
         // 设置哪些过滤器拦截哪些请求
-        Map<String,String> permChainMap = new HashMap<>();
+        Map<String, String> permChainMap = new HashMap<>();
         //permChainMap.put("/user/**", "tokenAuthc");
-        List<AuthSysPermission> permissionList = this.permissionService.searchPermissions();
-        if(permissionList != null){
-            for(AuthSysPermission permission:permissionList){// /user/**
-                permChainMap.put("/"+permission.getResources().getRscUrl()+"/**", "authcToken, permAuthc");
-            }
-        }
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(permChainMap);
 
@@ -84,7 +72,7 @@ public class ShiroConfiguration {
     }
 
     @Bean("securityManager") // 固定！
-    public DefaultWebSecurityManager createSecurityManager(@Qualifier("shiroRealm") ShiroAuthorizingRealm shiroRealm){
+    public DefaultWebSecurityManager createSecurityManager(@Qualifier("shiroRealm") ShiroAuthorizingRealm shiroRealm) {
         // 创建SecurityMananger对象，并且装配Realm对象
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager(shiroRealm);
         // 自定义缓存实现 使用redis
@@ -128,6 +116,7 @@ public class ShiroConfiguration {
     }
 
     // 准备RedisSessionDAO
+
     /**
      * RedisSessionDAO shiro sessionDao层的实现 通过redis
      * 使用的是shiro-redis开源插件
@@ -140,6 +129,7 @@ public class ShiroConfiguration {
         redisSessionDAO.setKeyPrefix(SESSION_KEY);
         return redisSessionDAO;
     }
+
     /**
      * cacheManager 缓存 redis实现
      * 使用的是shiro-redis开源插件
@@ -154,6 +144,7 @@ public class ShiroConfiguration {
         redisCacheManager.setKeyPrefix(CACHE_KEY);
         return redisCacheManager;
     }
+
     /**
      * 配置shiro redisManager
      * 使用的是shiro-redis开源插件

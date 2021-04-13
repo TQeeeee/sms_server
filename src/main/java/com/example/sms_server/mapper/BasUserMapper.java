@@ -15,4 +15,5 @@ public interface BasUserMapper extends BaseMapper<BasUser> {
     //BasUser getById(Integer id);
     BasUser getById(String id);
 
+    BasUser findByUserName(String username);
 }
