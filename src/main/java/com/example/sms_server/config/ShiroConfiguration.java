@@ -71,7 +71,7 @@ public class ShiroConfiguration {
         return shiroFilterFactoryBean;
     }
 
-    @Bean("securityManager") // 固定！
+    @Bean("securityManager")
     public DefaultWebSecurityManager createSecurityManager(@Qualifier("shiroRealm") ShiroAuthorizingRealm shiroRealm) {
         // 创建SecurityMananger对象，并且装配Realm对象
         DefaultWebSecurityManager manager = new DefaultWebSecurityManager(shiroRealm);

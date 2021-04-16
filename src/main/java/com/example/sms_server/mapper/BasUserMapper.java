@@ -9,10 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Mapper
-public interface BasUserMapper extends BaseMapper<BasUser> {
+public interface BasUserMapper extends EasyBaseMapper<BasUser> {
     //继承了BaseMapper之后，基本的crud功能不必再专门定义方法
     //@Select("select * from bas_user where user_id=#{id}")
     //BasUser getById(Integer id);
+    //实现批量导入用户接口
     BasUser getById(String id);
 
     BasUser findByUserName(String username);
