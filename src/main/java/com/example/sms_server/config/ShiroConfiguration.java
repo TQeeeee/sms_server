@@ -58,6 +58,7 @@ public class ShiroConfiguration {
 
         // 设置哪些过滤器拦截哪些请求
         Map<String, String> permChainMap = new HashMap<>();
+        permChainMap.put("/user/**","authcToken");
         //permChainMap.put("/user/**", "tokenAuthc");
 
         shiroFilterFactoryBean.setFilterChainDefinitionMap(permChainMap);

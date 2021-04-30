@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sms_server.mapper.BasStudentMapper">
+    <!--    public String getEmailAddressById(String studentId); -->
+    <select id="getEmailAddressById" resultType="string">
+        select email_address from  bas_student where student_id = #{studentId}
+    </select>
+    <!--根据Id获取所有的班级-->
+    <!--分页显示用户-->
+
+</mapper>

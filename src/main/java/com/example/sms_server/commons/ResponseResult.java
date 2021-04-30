@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 public class ResponseResult {
+    // 50001是数据库方面的失败
     private int code = 20000;
     private String status = "success";
     private Object data;

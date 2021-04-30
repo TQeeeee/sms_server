@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sms_server.mapper.BasClassMapper">
+    <!--   public List<BasClass> getClassByTeacher(String teacherId); -->
+    <select id="getClassByTeacher" resultType="com.example.sms_server.entity.BasClass">
+        select * from  bas_class where teacher_id = #{teacherId}
+    </select>
+    <!--public List<String> getClassIdByTeacher(String teacherId);-->
+    <select id="getClassIdByTeacher" resultType="string">
+        select class_id from bas_class where teacher_id = #{teacherId}
+    </select>
+    <!--public List<String> getUnFullClassIds(Integer gradeId, String majorId)-->
+    <select id="getUnFullClassIds" resultType="string">
+        select class_id from bas_class where major_id = #{majorId} AND grade_id = #{gradeId}
+          AND max_count &gt; student_count
+    </select>
+    <!--public List<String> getTeacherIdByClassId(String classId);-->
+    <select id="getTeacherIdByClassId" resultType="string">
+        select teacher_id from bas_class where class_id = #{classId}
+    </select>
+
+    <!--public void addStudent(String classId);-->
+
+    <!--根据Id获取所有的班级-->
+    <!--分页显示用户-->
+
+</mapper>

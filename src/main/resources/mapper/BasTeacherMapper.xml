@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.sms_server.mapper.BasTeacherMapper">
+    <!--    public Account getAcct(Long id); -->
+    <select id="getById" resultType="com.example.sms_server.entity.BasTeacher">
+        select * from  bas_teacher where teacher_id = #{id}
+    </select>
+    <!--public String getEmailAddressById(String teacherId);-->
+    <select id="getEmailAddressById" resultType="string">
+        select email_address from bas_teacher where teacher_id = #{teacherId}
+    </select>
+    <!--根据Id获取所有的班级-->
+    <!--分页显示用户-->
+
+</mapper>

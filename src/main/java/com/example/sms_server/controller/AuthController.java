@@ -1,12 +1,15 @@
 package com.example.sms_server.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.sms_server.commons.ResponseResult;
 import com.example.sms_server.entity.AuthSysAccount;
 import com.example.sms_server.entity.BasUser;
 import com.example.sms_server.service.BasUserService;
+import com.example.sms_server.service.resetPasswordService;
 import com.example.sms_server.utils.EncryptUtil;
 import com.example.sms_server.utils.JwtUtil;
 import com.example.sms_server.utils.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -19,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 //拦截用户登录请求和鉴权
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -26,6 +30,9 @@ public class AuthController {
     private RedisUtil redisUtil;
     @Autowired
     private BasUserService basUserService;
+    @Autowired
+    private resetPasswordService resetPasswordService;
+
 
     @PostMapping("/login")
     public ResponseResult login(@RequestBody AuthSysAccount account, HttpSession session) {
@@ -62,6 +69,14 @@ public class AuthController {
         }
     }
 
+    @RequestMapping("/noLogin")
+    public ResponseResult noLogin(){
+        ResponseResult result = new ResponseResult();
+        result.setCode(20001);
+        result.setData("没有登录，请登录先");
+        return result;
+    }
+
     @GetMapping("/info")
     public ResponseResult info(@RequestHeader("X-Token") String token, HttpSession session) {
         //System.out.println(session.getId());
@@ -80,6 +95,22 @@ public class AuthController {
         }
         return result;
     }
+    //用户未登录，忘记密码------咋办？但是该用户确实是系统用户
+    @PostMapping("/forgetPassword")
+    public ResponseResult forgetPassword(@RequestBody JSONObject jsonObject){
+        ResponseResult responseResult = new ResponseResult();
+        log.info(jsonObject.getString("userId"));
+        try {
+            resetPasswordService.resetUserPassword(jsonObject.getString("userId"));
+        } catch (RuntimeException e){
+            responseResult.setCode(50001);
+            responseResult.setData(e.getMessage());
+        }
+        return responseResult;
+    }
+
+
+
     @PostMapping("/logout")
     public ResponseResult logOut(@RequestHeader("X-Token") String token){
         ResponseResult result = new ResponseResult();

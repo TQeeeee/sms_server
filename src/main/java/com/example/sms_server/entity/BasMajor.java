@@ -9,15 +9,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("bas_class")
-public class BasClass {
+@TableName("bas_major")
+public class BasMajor {
     @TableId
-    private String classId;
-    private Integer gradeId;
     private String majorId;
-    private String teacherId;
-    private String className;
-    private Integer studentCount;
-    private Integer maxCount;
-
+    private String majorName;
 }
